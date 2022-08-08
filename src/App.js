@@ -5,6 +5,12 @@ import ResetButton from './components/ResetButton';
 
 function App() {
 
+  
+  const [board, setBoard] = useState(Array(9).fill(null));
+  const [currentPlayer, setcurrentPlayer] =useState(true);
+  const [score, setScore] = useState({ xScore: 0, oScore: 0 })
+  const [gameOver, setGameOver] = useState(false)
+
   const WinningCombo =[
     [0, 1, 2],
     [3, 4, 5],
@@ -15,40 +21,36 @@ function App() {
     [0, 4, 8],
     [2, 4, 6]
   ]
-  const [board, setBoard] = useState(Array(9).fill(null));
-  const [xPlaying, setXPlaying] =useState(true);
-  const [score, setScore] = useState({ xScore: 0, oScore: 0 })
-  const [gameOver, setGameOver] = useState(false)
-
-
 
   const handleSquareClick = (squareIdx) =>{
     const updateBoard = board.map((value, idx)=>{
       if(idx === squareIdx){
-        return xPlaying === true ? "X" : "O";
+        return currentPlayer === true ? "X" : "O";
       }else{
         return value;
       }
+      
     })
 
     const winner = checkWinner(updateBoard);
-    
+
     if(winner) {
       if(winner === 'O'){
         let {oScore} = score;
         oScore += 1
         setScore({...score, oScore})
+        
 
       }else{
         let {xScore} = score;
         xScore += 1
         setScore({...score, xScore})
+        
       }
     }
 
-    
     setBoard(updateBoard);
-    setXPlaying(!xPlaying);
+    setcurrentPlayer(!currentPlayer);
   }
 
   const checkWinner = (board) => {
@@ -71,11 +73,11 @@ function App() {
     <div className="App">
       <h1>TIC TAC TOE</h1>
 
-        <Score score={score} xPlaying={xPlaying}/>
+        <Score score={score} />
         <Board board = {board} onClick={ gameOver ? resetBoard : handleSquareClick}/>
         <ResetButton resetBoard={resetBoard}/>
-
     </div>
+    
   );
 }
 
